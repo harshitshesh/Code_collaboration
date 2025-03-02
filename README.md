@@ -40,7 +40,7 @@ Routing System: Express Routers
 To run this project on your local system, follow these steps:
 
 # Clone the repository
-git clone https://github.com/harshitshesh/codeunity.git
+git clone (https://github.com/harshitshesh/Code_collaboration/)
 
 # Navigate to the project directory
 cd codeunity
