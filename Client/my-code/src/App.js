@@ -9,7 +9,7 @@ function App() {
     <Toaster position="top-right"></Toaster>
 <Routes>
 <Route path="/" element={<Login/>}/>
-<Route path="/dashboard/:id" element={<Dashboard/>}/>
+<Route path="/dashboard/:roomid" element={<Dashboard/>}/>
 
 </Routes>
  </>

@@ -73,9 +73,9 @@ navigate("/")
 
    async function copyroomid(){
 
-    console.log(roomid)
+    // console.log(roomid)
 try{
-    // await navigator.clipboard.writeText(roomid);
+    await navigator.clipboard.writeText(roomid);
     toast.success("Copied Room ID!");
 }catch(err){
    toast.error("unable to copy") 
