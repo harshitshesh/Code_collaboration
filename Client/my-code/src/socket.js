@@ -8,5 +8,5 @@ export const initsocket = async ()=>{
         timeout: 10000,
         transports: ['websocket'],
     }
-    return io("http://localhost:5000", option)
+    return io("https://code-collaboration-xiln.onrender.com", option)
 }
