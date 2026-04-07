@@ -2,6 +2,12 @@ const express = require("express")
 const app = express()
 const http = require('http')
 const {Server} = require('socket.io')
+const { exec } = require('child_process');
+const fs = require('fs');
+const path = require('path');
+const cors = require('cors');
+
+app.use(cors());
 
 const server = http.createServer(app);
 
@@ -95,10 +101,6 @@ io.on('connection', (socket) => {
     });
 
     socket.on('execute-code', ({roomid, code, language}) => {
-        const { exec } = require('child_process');
-        const fs = require('fs');
-        const path = require('path');
-        
         const fileExt = {
             'javascript': 'js',
             'python': 'py',
@@ -108,12 +110,12 @@ io.on('connection', (socket) => {
 
         const runCmd = {
             'javascript': 'node',
-            'python': 'python',
+            'python': process.platform === 'win32' ? 'python' : 'python3',
             'cpp': 'g++',
-            'java': 'java' // Usually requires compiled class, keeping simple here
+            'java': 'java'
         }[language];
 
-        const tempFile = path.join(__dirname, `temp_${Date.now()}.${fileExt}`);
+        const tempFile = path.join(__dirname, `temp_${socket.id.replace(/[^a-zA-Z0-9]/g, '')}_${Date.now()}.${fileExt}`);
         
         fs.writeFile(tempFile, code, (err) => {
             if (err) {
@@ -121,13 +123,21 @@ io.on('connection', (socket) => {
                 return;
             }
 
-            let command = `${runCmd} ${tempFile}`;
+            let command = `${runCmd} "${tempFile}"`;
             if (language === 'cpp') {
-               command = `g++ ${tempFile} -o ${tempFile}.exe && ${tempFile}.exe`;
+               const outFile = `${tempFile}.exe`;
+               command = `g++ "${tempFile}" -o "${outFile}" && "${outFile}"`;
             }
 
-            exec(command, { timeout: 5000 }, (error, stdout, stderr) => {
-                io.to(socket.id).emit('execution-result', { out: stdout || '', err: stderr || (error ? error.message : '') });
+            exec(command, { timeout: 10000, shell: true }, (error, stdout, stderr) => {
+                const output = stdout || '';
+                const errMsg = stderr || (error ? error.message : '');
+                
+                // Send result back to the executor
+                io.to(socket.id).emit('execution-result', { out: output, err: errMsg });
+                
+                // Also broadcast to everyone in the room so all see the output
+                socket.in(roomid).emit('execution-result', { out: output, err: errMsg });
                 
                 // Cleanup temp files
                 fs.unlink(tempFile, () => {});
@@ -218,7 +228,6 @@ io.on('connection', (socket) => {
         }
 
         delete allusers[socket.id];
-        socket.leave();
     });
 }); 
 

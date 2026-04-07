@@ -86,6 +86,12 @@ export function Dashboard() {
                 toast.success(`${username} Left the room`)
                 setclients((prev) => prev.filter((client) => client.socketid !== socketid))
             })
+
+            socketref.current.on('execution-result', ({ out, err }) => {
+                setTerminalOutput(out);
+                setTerminalError(err);
+                setIsTerminalRunning(false);
+            })
         }
         init();
 
@@ -103,6 +109,7 @@ export function Dashboard() {
                 socketref.current.off("controller-changed");
                 socketref.current.off("language-change");
                 socketref.current.off("terminal-output");
+                socketref.current.off("execution-result");
             }
         }
     }, [])
@@ -153,26 +160,6 @@ export function Dashboard() {
             language: language
         });
     }
-
-    // Add a useEffect listener for execution results from the backend
-    useEffect(() => {
-        if (!socketref.current) return;
-        
-        const handleExecutionResult = ({ out, err }) => {
-            setTerminalOutput(out);
-            setTerminalError(err);
-            setIsTerminalRunning(false);
-            socketref.current.emit("terminal-output", { roomid, output: { out, err, isRunning: false } });
-        };
-
-        socketref.current.on('execution-result', handleExecutionResult);
-
-        return () => {
-            if (socketref.current) {
-                socketref.current.off('execution-result', handleExecutionResult);
-            }
-        };
-    }, []);
 
     const unreadBadge = (!isChatOpen && unreadCount > 0) ? (
         <span className="badge bg-danger rounded-pill ms-2">{unreadCount}</span>

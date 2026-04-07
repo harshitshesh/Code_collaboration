@@ -38,13 +38,13 @@ export function Chat({ socketref, roomid, username, onNewUnread }) {
     return (
         <div className="d-flex flex-column h-100 glass-morphism shadow-lg" style={{ width: '300px', borderLeft: '1px solid rgba(255,255,255,0.1)' }}>
             <div className="p-3 border-bottom border-secondary d-flex align-items-center">
-                <h6 className="m-0 text-accent font-weight-bold" style={{ color: 'var(--accent-primary)' }}>REAL-TIME CHAT</h6>
+                <h6 className="m-0 text-accent font-weight-bold" style={{ color: 'var(--accent-primary)' }}>CHAT</h6>
             </div>
-            
+
             <div className="flex-grow-1 overflow-auto p-3 d-flex flex-column gap-2" style={{ maxHeight: 'calc(100vh - 120px)' }}>
                 {messages.map((msg, index) => (
-                    <div 
-                        key={index} 
+                    <div
+                        key={index}
                         className={`message-bubble ${msg.username === username ? 'message-self' : 'message-other'}`}
                     >
                         <div style={{ fontSize: '10px', opacity: 0.7, marginBottom: '2px' }}>
@@ -58,16 +58,16 @@ export function Chat({ socketref, roomid, username, onNewUnread }) {
 
             <form onSubmit={sendMessage} className="p-3 bg-dark-sidebar border-top border-secondary">
                 <div className="input-group">
-                    <input 
-                        type="text" 
-                        className="form-control bg-dark border-secondary text-white" 
-                        placeholder="Type a message..." 
+                    <input
+                        type="text"
+                        className="form-control bg-dark border-secondary text-white"
+                        placeholder="Type a message..."
                         value={message}
                         onChange={(e) => setMessage(e.target.value)}
                         style={{ fontSize: '13px', borderRadius: '8px 0 0 8px' }}
                     />
-                    <button 
-                        className="btn btn-premium" 
+                    <button
+                        className="btn btn-premium"
                         type="submit"
                         style={{ borderRadius: '0 8px 8px 0', padding: '0 15px' }}
                     >
