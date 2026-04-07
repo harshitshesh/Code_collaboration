@@ -6,6 +6,7 @@ export function ClientProfile({username}) {
         <div className="d-flex align-items-center mb-4 ms-4 avatar-wrapper">
             <Avatar 
                 name={username.toString()} 
+                src={`https://api.dicebear.com/7.x/notionists/svg?seed=${username}`}
                 size={40} 
                 round="12px" 
                 color="#10b981"

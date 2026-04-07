@@ -5,8 +5,9 @@ import { useNavigate } from "react-router-dom";
 
 export function Login() {
     const [roomid, setroomid] = useState("");
-    const [username, setusername] = useState("")
-    const navigatepage = useNavigate()
+    const [username, setusername] = useState("");
+    const [isHost, setIsHost] = useState(false);
+    const navigatepage = useNavigate();
 
     function joinroomfunc() {
         if (!roomid || !username) {
@@ -14,15 +15,16 @@ export function Login() {
             return
         }
         navigatepage(`/dashboard/${roomid}`, {
-            state: { username }
+            state: { username, isHost }
         })
         toast.success("Welcome! Start collaborating.")
     }
 
     function genrateroomid(e) {
         e.preventDefault();
-        let id = uuid()
-        setroomid(id)
+        let id = uuid();
+        setroomid(id);
+        setIsHost(true);
         toast.success("New Room ID generated")
     }
 

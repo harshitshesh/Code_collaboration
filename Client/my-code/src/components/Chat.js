@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 
-export function Chat({ socketref, roomid, username }) {
+export function Chat({ socketref, roomid, username, onNewUnread }) {
     const [message, setMessage] = useState("");
     const [messages, setMessages] = useState([]);
     const scrollRef = useRef();
@@ -9,6 +9,7 @@ export function Chat({ socketref, roomid, username }) {
         if (socketref.current) {
             socketref.current.on('receive-message', (data) => {
                 setMessages((prev) => [...prev, data]);
+                if (onNewUnread) onNewUnread();
             });
         }
         return () => {
