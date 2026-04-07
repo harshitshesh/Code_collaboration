@@ -188,12 +188,12 @@ export function Dashboard() {
             {isSidebarOpen && (
                 <div className="col-12 col-md-2 bg-sidebar text-light d-flex flex-column border-end border-secondary h-100 position-relative z-index-master">
                     <div className="p-4 text-center d-none d-md-block">
-                        <img src="/img/code-logo.png" className="img-fluid rounded-pill mb-3" style={{ maxWidth: "60px" }} alt="Logo" />
+                        <img src="/img/code-logo.png" className="img-fluid mb-3 mx-auto d-block" style={{ maxWidth: "60px" }} alt="Logo" />
                         <h5 className="font-weight-bold" style={{ color: 'var(--accent-primary)', fontSize: '16px' }}>CODE COLLAB</h5>
                     </div>
                     
                     <div className="px-3 pt-3 pt-md-0">
-                        <p className="text-muted small mb-3 text-uppercase font-weight-bold" style={{ letterSpacing: '1px' }}>Connected Members</p>
+                        <p className="text-white opacity-50 small mb-3 text-uppercase font-weight-bold" style={{ letterSpacing: '1px' }}>Connected Members</p>
                         <hr className="border-secondary mt-0 mb-4" />
                     </div>
 

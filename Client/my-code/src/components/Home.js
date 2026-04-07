@@ -9,13 +9,13 @@ export function Home() {
              style={{ background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)' }}>
             <div className="text-center mb-5">
                 <img 
-                    className="img-fluid rounded-pill mb-3" 
+                    className="img-fluid mb-3 mx-auto d-block" 
                     src="/img/code-logo.png" 
                     alt="logo" 
                     style={{ width: '100px', filter: 'drop-shadow(0 0 15px rgba(16, 185, 129, 0.4))' }} 
                 />
-                <h1 className="text-white fw-bold mb-2">Code Collab Universe</h1>
-                <p className="text-muted">Choose your workspace mode to start collaborating</p>
+                <h1 className="text-white fw-bold mb-2">Code Collab </h1>
+                <p className="text-white opacity-75">Choose your workspace mode to start collaborating</p>
             </div>
 
             <div className="row w-100 justify-content-center gap-4 px-3" style={{ maxWidth: '800px' }}>
@@ -36,7 +36,7 @@ export function Home() {
                         <i className="bi bi-shield-lock-fill text-premium fs-1"></i>
                     </div>
                     <h3 className="text-white fw-bold">Private Room</h3>
-                    <p className="text-muted small">Create or join a secure room for focused pair programming.</p>
+                    <p className="text-white opacity-75 small">Create or join a secure room for focused pair programming.</p>
                 </div>
 
                 <div 
@@ -56,11 +56,11 @@ export function Home() {
                         <i className="bi bi-globe-americas text-primary fs-1"></i>
                     </div>
                     <h3 className="text-white fw-bold">Public Room</h3>
-                    <p className="text-muted small">Connect with developers nearby ({'<'}100m) and join the local chat.</p>
+                    <p className="text-white opacity-75 small">Connect with developers nearby with local chat.</p>
                 </div>
             </div>
             <div className="mt-5 text-center">
-                <p className="text-muted" style={{ fontSize: '12px' }}>Real-time synchronization powered by WebSockets</p>
+                <p className="text-muted small">Real-time synchronization powered by WebSockets</p>
             </div>
         </div>
     );

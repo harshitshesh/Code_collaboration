@@ -1,12 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 
 :root {
-  --bg-dark: #0f172a;
+  --bg-dark: #0f172a; /* Deep premium dark blue */
   --bg-sidebar: #1e293b;
   --bg-card: #334155;
   --accent-primary: #10b981;
   --accent-secondary: #06b6d4;
-  --text-main: #f8fafc;
+  --text-main: #f1f5f9;
   --text-muted: #94a3b8;
   --border-color: rgba(255, 255, 255, 0.1);
   --glass-bg: rgba(30, 41, 59, 0.7);
@@ -17,12 +21,56 @@
   padding: 0;
   box-sizing: border-box;
   font-family: 'Inter', sans-serif;
+  border-color: rgba(255, 255, 255, 0.1);
 }
 
-body {
+/* Global base color - safe inheritance */
+html, body {
   background-color: var(--bg-dark);
   color: var(--text-main);
-  overflow: hidden;
+  height: 100%;
+  width: 100%;
+}
+
+/* Ensure all typography in cards/forms defaults to visible white-ish */
+.glass-morphism p, 
+.glass-morphism span, 
+.glass-morphism label,
+.glass-morphism small {
+  color: #f8fafc !important;
+}
+
+/* Specific text color utilities */
+.text-main { color: var(--text-main) !important; }
+.text-muted { color: var(--text-muted) !important; }
+.text-accent { color: var(--accent-primary) !important; }
+.text-white { color: #ffffff !important; }
+
+/* MANUALLY DEFINE MONOKAI SYNTAX COLORS to prevent black text */
+.cm-s-monokai .cm-keyword { color: #f92672 !important; }    /* Pink */
+.cm-s-monokai .cm-atom { color: #ae81ff !important; }       /* Purple */
+.cm-s-monokai .cm-number { color: #ae81ff !important; }     /* Purple */
+.cm-s-monokai .cm-def { color: #a6e22e !important; }        /* Green */
+.cm-s-monokai .cm-variable { color: #f8f8f2 !important; }   /* White */
+.cm-s-monokai .cm-property { color: #a6e22e !important; }   /* Green */
+.cm-s-monokai .cm-operator { color: #f92672 !important; }   /* Pink */
+.cm-s-monokai .cm-comment { color: #75715e !important; }    /* Gray/Brown */
+.cm-s-monokai .cm-string { color: #e6db74 !important; }     /* Yellow */
+.cm-s-monokai .cm-meta { color: #f92672 !important; }
+.cm-s-monokai .cm-tag { color: #f92672 !important; }
+.cm-s-monokai .cm-attribute { color: #a6e22e !important; }
+.cm-s-monokai .cm-qualifier { color: #a6e22e !important; }
+.cm-s-monokai .cm-type { color: #66d9ef !important; }       /* Cyan */
+.cm-s-monokai .cm-header { color: #ae81ff !important; }
+.cm-s-monokai .cm-builtin { color: #a6e22e !important; }
+.cm-s-monokai .cm-bracket { color: #f8f8f2 !important; }
+
+/* React Hot Toast Visibility Overrides */
+.go2072408551 { /* Base toast class */
+  background: #1e293b !important;
+  color: #f1f5f9 !important;
+  border: 1px solid rgba(255,255,255,0.1);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4) !important;
 }
 
 /* Custom Scrollbar */
@@ -78,16 +126,21 @@ body {
   transform: scale(1.05);
 }
 
-/* CodeMirror Overrides for Premium Look */
+/* CodeMirror Overrides for Monokai Look */
 .CodeMirror {
   font-family: 'JetBrains Mono', monospace !important;
   font-size: 14px !important;
-  background: transparent !important;
+  background: #272822 !important; /* Classic Monokai Background */
+  color: #f8f8f2 !important;     /* Classic Monokai Foreground */
 }
 
 .CodeMirror-gutters {
-  background: transparent !important;
-  border-right: 1px solid var(--border-color) !important;
+  background: #272822 !important;
+  border-right: 1px solid rgba(255,255,255,0.1) !important;
+}
+
+.CodeMirror-linenumber {
+  color: #8f908a !important;
 }
 
 .chat-input-container {

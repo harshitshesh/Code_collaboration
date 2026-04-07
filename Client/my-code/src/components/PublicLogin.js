@@ -75,7 +75,7 @@ export function PublicLogin() {
                                 <i className="bi bi-globe-americas text-primary fs-3"></i>
                             </div>
                             <h2 className="text-white fw-bold mb-1">Public Room</h2>
-                            <p className="text-muted small">Connect with developers within 100m radius</p>
+                            <p className="text-muted small">Connect with developers </p>
                         </div>
 
                         <form onSubmit={handleJoin}>
@@ -94,7 +94,7 @@ export function PublicLogin() {
                                 <div className="p-3 mt-3 rounded rounded-3" style={{ background: "rgba(255, 255, 255, 0.05)", border: "1px dashed rgba(255,255,255,0.2)" }}>
                                     <div className="form-check form-switch mb-2">
                                         <input className="form-check-input" type="checkbox" id="mockSwitch" checked={useMock} onChange={(e) => setUseMock(e.target.checked)} />
-                                        <label className="form-check-label text-warning small" htmlFor="mockSwitch">Enable Mock Locations (Dev Test)</label>
+                                        <label className="form-check-label text-warning small" htmlFor="mockSwitch">Enable  Locations</label>
                                     </div>
                                     {useMock && (
                                         <select 

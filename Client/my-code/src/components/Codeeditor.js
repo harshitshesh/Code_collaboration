@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from "react";
 import CodeMirror from "codemirror";
 
 import "codemirror/lib/codemirror.css";
-import "codemirror/theme/dracula.css"; 
+import "codemirror/theme/monokai.css"; 
 
 import "codemirror/addon/edit/closebrackets";
 import "codemirror/addon/edit/closetag";
@@ -30,7 +30,7 @@ export function Codeeditor({socketref, roomid, oncodechange, readOnly, language}
     const init = async () => {
       const editor = CodeMirror.fromTextArea(textareaRef.current, {
         mode: languageModes[language] || "javascript",
-        theme: "dracula",
+        theme: "monokai",
         autoCloseTags: true,
         autoCloseBrackets: true,
         lineNumbers: true,

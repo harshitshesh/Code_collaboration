@@ -109,17 +109,17 @@ export function PublicDashboard() {
             </div>
 
             {/* Sidebar */}
-            <div className={`${isSidebarOpen ? 'd-flex' : 'd-none'} d-md-flex col-12 col-md-3 bg-sidebar text-light flex-column border-end border-secondary position-absolute position-md-relative z-index-master h-100`} style={{ zIndex: 1050, top: '60px', left: 0, height: 'calc(100vh - 60px)', ...(window.innerWidth >= 768 && { top: 0, height: '100vh'}) }}>
+            <div className={`${isSidebarOpen ? 'd-flex' : 'd-none'} d-md-flex col-12 col-md-3 bg-sidebar text-light flex-column border-end border-secondary position-relative z-index-master h-100`} style={{ zIndex: 1050 }}>
                 <div className="p-4 text-center d-none d-md-block">
                     <div className="rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style={{ width: "60px", height: "60px", background: "rgba(59, 130, 246, 0.2)", border: "2px solid #3b82f6" }}>
                         <i className="bi bi-globe-americas text-primary fs-3"></i>
                     </div>
                     <h5 className="font-weight-bold mb-1" style={{ color: '#3b82f6', fontSize: '16px' }}>PUBLIC ROOM</h5>
-                    <p className="text-muted small">Radius: &lt;100m</p>
+                 
                 </div>
                 
                 <div className="px-3 pt-3 pt-md-0">
-                    <p className="text-muted small mb-3 text-uppercase font-weight-bold" style={{ letterSpacing: '1px' }}>Nearby Developers ({nearbyUsers.length})</p>
+                    <p className="text-white opacity-50 small mb-3 text-uppercase font-weight-bold" style={{ letterSpacing: '1px' }}>Nearby Developers ({nearbyUsers.length})</p>
                     <hr className="border-secondary mt-0 mb-4" />
                 </div>
 
@@ -141,13 +141,8 @@ export function PublicDashboard() {
                 </div>
             </div>
 
-            {/* Mobile Backdrop Overlay for Sidebar */}
-            {isSidebarOpen && window.innerWidth < 768 && (
-                <div className="position-fixed w-100 h-100 bg-black opacity-50" style={{top: '60px', left: 0, zIndex: 1045}} onClick={() => setIsSidebarOpen(false)}></div>
-            )}
-
             {/* Main Chat Area */}
-            <div className="d-flex flex-column h-100 bg-dark w-100 position-relative flex-grow-1" style={{ height: 'calc(100vh - 60px)', ...(window.innerWidth >= 768 && { height: '100vh'}) }}>
+            <div className="d-flex flex-column bg-dark position-relative flex-grow-1 min-vw-0" style={{ height: window.innerWidth < 768 ? 'calc(100vh - 60px)' : '100vh' }}>
                 <div className="p-3 border-bottom border-secondary d-none d-md-flex align-items-center justify-content-between" style={{ background: "rgba(255,255,255,0.02)" }}>
                     <h6 className="m-0 text-white font-weight-bold">
                         <i className="bi bi-geo-alt-fill text-primary me-2"></i>

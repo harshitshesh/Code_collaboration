@@ -36,17 +36,17 @@ export function Login() {
                     <div className="glass-morphism p-5 rounded-4 shadow-lg text-center">
                         <div className="mb-4">
                             <img 
-                                className="img-fluid rounded-pill mb-3" 
+                                className="img-fluid mb-3 mx-auto d-block" 
                                 src="/img/code-logo.png" 
                                 alt="logo" 
                                 style={{ width: '80px', filter: 'drop-shadow(0 0 10px rgba(16, 185, 129, 0.3))' }} 
                             />
                             <h2 className="text-white fw-bold mb-1">Code Collab</h2>
-                            <p className="text-muted small">Real-time Pair Programming Platform</p>
+                            <p className="small">Pair Programming Platform</p>
                         </div>
 
                         <div className="form-group mb-4">
-                            <label className="text-start d-block text-muted small mb-2 ms-1">ROOM ID</label>
+                            <label className="text-start d-block  small mb-2 ms-1">ROOM ID</label>
                             <input 
                                 type="text" 
                                 className="form-control bg-dark border-secondary text-white mb-3 py-2 px-3" 
@@ -56,7 +56,7 @@ export function Login() {
                                 style={{ borderRadius: '10px' }}
                             />
 
-                            <label className="text-start d-block text-muted small mb-2 ms-1">USERNAME</label>
+                            <label className="text-start d-block  small mb-2 ms-1">USERNAME</label>
                             <input 
                                 type="text" 
                                 className="form-control bg-dark border-secondary text-white py-2 px-3" 
@@ -74,7 +74,7 @@ export function Login() {
                             Join Workspace
                         </button>
 
-                        <div className="text-muted small">
+                        <div className="small">
                             Don't have an ID? <span 
                                 className="text-primary fw-bold text-decoration-none" 
                                 style={{ cursor: "pointer", color: 'var(--accent-primary) !important' }} 
@@ -84,10 +84,10 @@ export function Login() {
                     </div>
                     
                     <div className="text-center mt-4">
-                        <p className="text-muted" style={{ fontSize: '11px' }}>Built for developers, by developers.</p>
+                        <p className="" style={{ fontSize: '11px' }}>Built for developers, by developers.</p>
                     </div>
                 </div>
             </div>
         </div>
     )
-}
+}

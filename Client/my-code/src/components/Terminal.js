@@ -12,7 +12,7 @@ export function Terminal({ output, error, isRunning }) {
     return (
         <div className="w-100 bg-black text-white d-flex flex-column border-top border-secondary" style={{ height: "30%", fontFamily: "'Fira Code', monospace", fontSize: "13px" }}>
             <div className="p-2 d-flex align-items-center justify-content-between" style={{ background: "#21252b", borderBottom: "1px solid #181a1f" }}>
-                <span className="text-muted fw-bold small"><i className="bi bi-terminal me-2"></i>OUTPUT</span>
+                <span className="fw-bold small"><i className="bi bi-terminal me-2"></i>OUTPUT</span>
                 {isRunning && <span className="spinner-border spinner-border-sm text-primary"></span>}
             </div>
             <div 
@@ -23,7 +23,7 @@ export function Terminal({ output, error, isRunning }) {
                 {output && <div className="text-light">{output}</div>}
                 {error && <div className="text-danger mt-2">{error}</div>}
                 {!output && !error && !isRunning && (
-                    <div className="text-muted opacity-50 fst-italic">Code output will appear here...</div>
+                    <div className="opacity-50 fst-italic">Code output will appear here...</div>
                 )}
             </div>
         </div>
