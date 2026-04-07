@@ -1,0 +1,119 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  --bg-dark: #0f172a;
+  --bg-sidebar: #1e293b;
+  --bg-card: #334155;
+  --accent-primary: #10b981;
+  --accent-secondary: #06b6d4;
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --border-color: rgba(255, 255, 255, 0.1);
+  --glass-bg: rgba(30, 41, 59, 0.7);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Inter', sans-serif;
+}
+
+body {
+  background-color: var(--bg-dark);
+  color: var(--text-main);
+  overflow: hidden;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-dark);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--bg-card);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+.glass-morphism {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border-color);
+}
+
+.btn-premium {
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.btn-premium:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+}
+
+.btn-premium:active {
+  transform: translateY(0);
+}
+
+.avatar-wrapper {
+  transition: transform 0.2s ease;
+}
+
+.avatar-wrapper:hover {
+  transform: scale(1.05);
+}
+
+/* CodeMirror Overrides for Premium Look */
+.CodeMirror {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 14px !important;
+  background: transparent !important;
+}
+
+.CodeMirror-gutters {
+  background: transparent !important;
+  border-right: 1px solid var(--border-color) !important;
+}
+
+.chat-input-container {
+  border-top: 1px solid var(--border-color);
+  padding: 1rem;
+  background: var(--bg-sidebar);
+}
+
+.message-bubble {
+  padding: 8px 12px;
+  border-radius: 12px;
+  margin-bottom: 8px;
+  max-width: 85%;
+  word-wrap: break-word;
+}
+
+.message-self {
+  background: var(--accent-primary);
+  color: white;
+  align-self: flex-end;
+  border-bottom-right-radius: 2px;
+}
+
+.message-other {
+  background: var(--bg-card);
+  color: var(--text-main);
+  align-self: flex-start;
+  border-bottom-left-radius: 2px;
+}

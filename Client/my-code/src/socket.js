@@ -1,12 +1,12 @@
 import { io } from 'socket.io-client'
 
-export const initsocket = async ()=>{
-  
-    const option = {
+export const initsocket = async () => {
+    const options = {
         'force new connection': true,
-        reconnectionAttempt: 'infinity',
+        reconnectionAttempts: 'Infinity',
         timeout: 10000,
         transports: ['websocket'],
     }
-    return io("https://code-collaboration-xiln.onrender.com", option)
-}
+    const backendUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:5000";
+    return io(backendUrl, options)
+}
