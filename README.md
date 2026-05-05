@@ -5,7 +5,7 @@ A real-time web application where users can connect, communicate, and collaborat
 ---
 
 ## 🚀 Live Demo
-👉 storied-mermaid-0b8a07.netlify.app
+(https://storied-mermaid-0b8a07.netlify.app/)
 
 ---
 
