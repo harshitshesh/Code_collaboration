@@ -33,11 +33,11 @@ export function PublicDashboard() {
 
             socketref.current.on('public-joined', ({ nearbyUsers }) => {
                 setNearbyUsers(nearbyUsers)
-                toast.success(`Connected to local chat! Found ${Math.max(nearbyUsers.length - 1, 0)} nearby users.`)
+                toast.success(`Connected! Found ${Math.max(nearbyUsers.length - 1, 0)} nearby users.`)
             })
 
             socketref.current.on('public-user-joined', ({ user }) => {
-                toast.success(`${user.username} appeared nearby!`)
+                toast.success(`${user.username} joined the room!`)
                 setNearbyUsers((prev) => {
                     if (!prev.find(u => u.socketid === user.socketid)) {
                         return [...prev, user];
@@ -47,7 +47,7 @@ export function PublicDashboard() {
             })
 
             socketref.current.on('public-disconnected', ({ socketid, username }) => {
-                toast.success(`${username} left the area`)
+                toast.success(`${username} left the room`)
                 setNearbyUsers((prev) => prev.filter((u) => u.socketid !== socketid))
             })
 
@@ -78,7 +78,7 @@ export function PublicDashboard() {
         return <Navigate to="/public" />
     }
 
-    const { username } = location.state;
+    const { username, city } = location.state;
 
     const sendMessage = (e) => {
         e.preventDefault();
@@ -95,37 +95,75 @@ export function PublicDashboard() {
         navigate("/")
     }
 
-    // ... useEffect remains unchanged ...
-
     return (
         <div className="container-fluid vh-100 p-0 overflow-hidden d-flex flex-column flex-md-row">
-            {/* Mobile Header */}
-            <div className="d-md-none bg-dark text-white p-3 d-flex align-items-center justify-content-between border-bottom border-secondary">
-                <div onClick={() => setIsSidebarOpen(!isSidebarOpen)} style={{cursor:'pointer'}}>
-                    <i className="bi bi-people-fill fs-4 text-primary"></i>
-                </div>
-                <h5 className="m-0 fw-bold fs-6" style={{color:'#3b82f6'}}><i className="bi bi-geo-alt-fill me-1"></i> Public Chat ({nearbyUsers.length})</h5>
-                <div style={{width:'32px'}}></div> {/* Spacer balance */}
+
+            {/* ── Mobile Header ── */}
+            <div className="d-md-none text-white p-2 d-flex align-items-center justify-content-between border-bottom border-secondary"
+                 style={{ background: '#0f172a', minHeight: '52px', flexShrink: 0 }}>
+
+                {/* Sidebar toggle */}
+                <button
+                    className="btn btn-sm btn-outline-secondary border-0 px-2"
+                    onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                    title="Members"
+                >
+                    <i className="bi bi-people-fill fs-5 text-primary"></i>
+                </button>
+
+                {/* Room label */}
+                <h5 className="m-0 fw-bold fs-6" style={{ color: '#3b82f6' }}>
+                    <i className="bi bi-geo-alt-fill me-1"></i>
+                    {city ? city : "Public Chat"} ({nearbyUsers.length})
+                </h5>
+
+                {/* Leave button — visible on mobile */}
+                <button
+                    onClick={logout}
+                    className="btn btn-sm btn-danger px-2 py-1 fw-semibold d-flex align-items-center gap-1"
+                    style={{ fontSize: '12px', borderRadius: '7px' }}
+                    title="Leave Room"
+                >
+                    <i className="bi bi-box-arrow-right"></i>
+                    <span>Leave</span>
+                </button>
             </div>
 
-            {/* Sidebar */}
-            <div className={`${isSidebarOpen ? 'd-flex' : 'd-none'} d-md-flex col-12 col-md-3 bg-sidebar text-light flex-column border-end border-secondary position-relative z-index-master h-100`} style={{ zIndex: 1050 }}>
-                <div className="p-4 text-center d-none d-md-block">
-                    <div className="rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style={{ width: "60px", height: "60px", background: "rgba(59, 130, 246, 0.2)", border: "2px solid #3b82f6" }}>
+            {/* ── Sidebar (Members) ── */}
+            <div
+                className={`${isSidebarOpen ? 'd-flex' : 'd-none'} d-md-flex flex-column border-end border-secondary`}
+                style={{
+                    width: '260px',
+                    minWidth: '260px',
+                    background: '#1e293b',
+                    zIndex: 1050,
+                    position: window.innerWidth < 768 ? 'absolute' : 'relative',
+                    top: window.innerWidth < 768 ? '52px' : 'auto',
+                    left: 0,
+                    height: window.innerWidth < 768 ? 'calc(100vh - 52px)' : '100%',
+                }}
+            >
+                {/* Desktop header */}
+                <div className="p-4 text-center d-none d-md-block border-bottom border-secondary">
+                    <div className="rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
+                         style={{ width: "60px", height: "60px", background: "rgba(59, 130, 246, 0.2)", border: "2px solid #3b82f6" }}>
                         <i className="bi bi-globe-americas text-primary fs-3"></i>
                     </div>
-                    <h5 className="font-weight-bold mb-1" style={{ color: '#3b82f6', fontSize: '16px' }}>PUBLIC ROOM</h5>
-                 
-                </div>
-                
-                <div className="px-3 pt-3 pt-md-0">
-                    <p className="text-white opacity-50 small mb-3 text-uppercase font-weight-bold" style={{ letterSpacing: '1px' }}>Nearby Developers ({nearbyUsers.length})</p>
-                    <hr className="border-secondary mt-0 mb-4" />
+                    <h5 className="fw-bold mb-0" style={{ color: '#3b82f6', fontSize: '15px' }}>PUBLIC ROOM</h5>
+                    {city && <p className="small mt-1 mb-0" style={{ color: '#94a3b8' }}>{city}</p>}
                 </div>
 
-                <div className="flex-grow-1 overflow-auto custom-scrollbar px-2">
+                <div className="px-3 pt-3">
+                    <p className="small mb-2 text-uppercase fw-bold" style={{ color: '#94a3b8', letterSpacing: '1px' }}>
+                        Developers ({nearbyUsers.length})
+                    </p>
+                    <hr className="border-secondary mt-0 mb-3" />
+                </div>
+
+                <div className="flex-grow-1 overflow-auto px-2 pb-2">
                     {nearbyUsers.map((data) => (
-                        <div key={data.socketid} className="d-flex align-items-center mb-2 p-2 rounded" style={{ background: "rgba(255,255,255,0.02)" }}>
+                        <div key={data.socketid} className="d-flex align-items-center mb-2 p-2 rounded-3"
+                             style={{ background: "rgba(255,255,255,0.03)" }}>
                             <ClientProfile username={data.username} />
                             {data.socketid === socketref.current?.id && (
                                 <span className="badge bg-primary ms-auto" style={{ fontSize: "10px" }}>You</span>
@@ -134,43 +172,87 @@ export function PublicDashboard() {
                     ))}
                 </div>
 
-                <div className="p-3 d-flex flex-column mt-auto border-top border-secondary">
-                    <button onClick={logout} className="btn btn-outline-danger w-100 py-2 border-0" style={{ fontSize: '14px' }}>
+                {/* Leave button — desktop sidebar */}
+                <div className="p-3 border-top border-secondary mt-auto">
+                    <button
+                        onClick={logout}
+                        className="btn btn-outline-danger w-100 py-2 border-0 fw-semibold"
+                        style={{ fontSize: '14px' }}
+                    >
                         <i className="bi bi-box-arrow-right me-2"></i>Leave Public Room
                     </button>
                 </div>
             </div>
 
-            {/* Main Chat Area */}
-            <div className="d-flex flex-column bg-dark position-relative flex-grow-1 min-vw-0" style={{ height: window.innerWidth < 768 ? 'calc(100vh - 60px)' : '100vh' }}>
-                <div className="p-3 border-bottom border-secondary d-none d-md-flex align-items-center justify-content-between" style={{ background: "rgba(255,255,255,0.02)" }}>
-                    <h6 className="m-0 text-white font-weight-bold">
+            {/* Mobile sidebar backdrop */}
+            {isSidebarOpen && window.innerWidth < 768 && (
+                <div
+                    className="position-fixed w-100 h-100"
+                    style={{ top: '52px', left: 0, zIndex: 1049, background: 'rgba(0,0,0,0.55)' }}
+                    onClick={() => setIsSidebarOpen(false)}
+                />
+            )}
+
+            {/* ── Main Chat Area ── */}
+            <div className="d-flex flex-column flex-grow-1 min-vw-0" style={{ background: '#0f172a', overflow: 'hidden' }}>
+
+                {/* Desktop chat header */}
+                <div className="p-3 border-bottom border-secondary d-none d-md-flex align-items-center justify-content-between"
+                     style={{ background: "rgba(255,255,255,0.02)", flexShrink: 0 }}>
+                    <h6 className="m-0 text-white fw-bold">
                         <i className="bi bi-geo-alt-fill text-primary me-2"></i>
-                        Local Area Chat
+                        {city ? `${city} — Local Chat` : "Local Area Chat"}
                     </h6>
+                    <span className="badge" style={{ background: 'rgba(59,130,246,0.2)', color: '#93c5fd', fontSize: '11px' }}>
+                        {nearbyUsers.length} online
+                    </span>
                 </div>
-                
-                <div className="flex-grow-1 overflow-auto p-4 d-flex flex-column gap-3" style={{ background: 'linear-gradient(to bottom, #0f172a, #111827)' }}>
+
+                {/* Messages area */}
+                <div className="flex-grow-1 overflow-auto p-3 p-md-4 d-flex flex-column gap-3"
+                     style={{ background: 'linear-gradient(to bottom, #0f172a, #111827)' }}>
+
                     {messages.length === 0 && (
-                        <div className="text-center text-muted mt-5 pt-5 flex-column d-flex align-items-center">
+                        <div className="text-center mt-5 pt-5 flex-column d-flex align-items-center" style={{ color: '#475569' }}>
                             <i className="bi bi-chat-dots opacity-25" style={{ fontSize: "5rem" }}></i>
-                            <p className="mt-3">Say hello to nearby developers!</p>
+                            <p className="mt-3 small">
+                                {city ? `Say hello to ${city} developers!` : "Say hello to nearby developers!"}
+                            </p>
                         </div>
                     )}
+
                     {messages.map((msg, index) => (
-                        <div 
-                            key={index} 
+                        <div
+                            key={index}
                             className={`d-flex flex-column ${msg.username === username ? 'align-items-end' : 'align-items-start'}`}
                         >
-                            <span className="text-muted mb-1" style={{ fontSize: "11px", opacity: 0.7 }}>
+                            {/* ── Sender Name — always white, clearly visible ── */}
+                            <span
+                                className="mb-1 fw-semibold"
+                                style={{
+                                    fontSize: "11px",
+                                    color: msg.username === username ? '#93c5fd' : '#ffffff',
+                                    opacity: 1,
+                                    letterSpacing: '0.3px'
+                                }}
+                            >
                                 {msg.username === username ? 'You' : msg.username}
                             </span>
-                            <div 
-                                className="px-3 py-2 rounded-3 shadow-sm text-white max-w-75"
-                                style={{ 
-                                    background: msg.username === username ? '#3b82f6' : 'rgba(255,255,255,0.1)',
-                                    borderBottomRightRadius: msg.username === username ? '0' : '8px',
-                                    borderBottomLeftRadius: msg.username !== username ? '0' : '8px'
+
+                            {/* Message bubble */}
+                            <div
+                                className="px-3 py-2 rounded-3 shadow-sm"
+                                style={{
+                                    background: msg.username === username
+                                        ? 'linear-gradient(135deg, #3b82f6, #2563eb)'
+                                        : 'rgba(255,255,255,0.10)',
+                                    color: '#ffffff',
+                                    maxWidth: '75%',
+                                    wordBreak: 'break-word',
+                                    fontSize: '14px',
+                                    borderBottomRightRadius: msg.username === username ? '4px' : '12px',
+                                    borderBottomLeftRadius: msg.username !== username ? '4px' : '12px',
+                                    border: msg.username !== username ? '1px solid rgba(255,255,255,0.08)' : 'none',
                                 }}
                             >
                                 {msg.message}
@@ -180,18 +262,19 @@ export function PublicDashboard() {
                     ))}
                 </div>
 
-                <form onSubmit={sendMessage} className="p-3 border-top border-secondary" style={{ background: "#111827" }}>
+                {/* Message input */}
+                <form onSubmit={sendMessage} className="p-3 border-top border-secondary" style={{ background: "#111827", flexShrink: 0 }}>
                     <div className="input-group">
-                        <input 
-                            type="text" 
-                            className="form-control bg-dark border-secondary text-white p-3" 
-                            placeholder="Message nearby developers..." 
+                        <input
+                            type="text"
+                            className="form-control border-secondary text-white p-2 p-md-3"
+                            placeholder={city ? `Message ${city} developers...` : "Message nearby developers..."}
                             value={messageInput}
                             onChange={(e) => setMessageInput(e.target.value)}
-                            style={{ borderRadius: '12px 0 0 12px' }}
+                            style={{ borderRadius: '12px 0 0 12px', background: 'rgba(255,255,255,0.07)', fontSize: '14px' }}
                         />
-                        <button 
-                            className="btn text-white px-4" 
+                        <button
+                            className="btn text-white px-3 px-md-4"
                             type="submit"
                             style={{ background: '#3b82f6', borderRadius: '0 12px 12px 0' }}
                         >

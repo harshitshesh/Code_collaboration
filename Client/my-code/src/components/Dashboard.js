@@ -21,6 +21,7 @@ export function Dashboard() {
     const [isChatOpen, setIsChatOpen] = useState(false)
     const [isSidebarOpen, setIsSidebarOpen] = useState(false) // For mobile menu
     const [unreadCount, setUnreadCount] = useState(0)
+    const [isMobile, setIsMobile] = useState(window.innerWidth < 768)
 
     const [language, setLanguage] = useState("javascript")
     const [terminalOutput, setTerminalOutput] = useState("")
@@ -32,6 +33,21 @@ export function Dashboard() {
     const { roomid } = useParams()
     const navigate = useNavigate()
     const coderef = useRef("")
+
+    // Track window resize for responsive behavior
+    useEffect(() => {
+        const handleResize = () => {
+            const mobile = window.innerWidth < 768;
+            setIsMobile(mobile);
+            if (!mobile) {
+                // On desktop, show sidebar and chat by default
+                setIsSidebarOpen(true);
+                setIsChatOpen(true);
+            }
+        };
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     useEffect(() => {
         let init = async () => {
@@ -170,23 +186,65 @@ export function Dashboard() {
     return (
         <div className="container-fluid vh-100 p-0 overflow-hidden d-flex flex-column flex-md-row">
             
-            {/* Mobile Header Bar */}
-            <div className="d-md-none bg-dark text-white p-3 d-flex align-items-center justify-content-between border-bottom border-secondary">
-                <div onClick={() => setIsSidebarOpen(!isSidebarOpen)} style={{cursor:'pointer'}}>
+            {/* ── Mobile Header Bar ── */}
+            <div className="d-md-none text-white p-2 d-flex align-items-center justify-content-between border-bottom border-secondary"
+                 style={{ background: '#0f172a', minHeight: '52px', flexShrink: 0 }}>
+
+                {/* Sidebar toggle */}
+                <button className="btn btn-sm btn-outline-secondary border-0 px-2" onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
                     <i className="bi bi-list fs-4"></i>
-                </div>
-                <h5 className="m-0 text-premium fw-bold fs-6">Code Collab</h5>
-                <div>
-                   <button className="btn btn-sm btn-outline-primary position-relative" onClick={() => setIsChatOpen(!isChatOpen)}>
-                       <i className="bi bi-chat-left-dots"></i>
-                       {unreadBadge && <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger border border-light" style={{fontSize:'0.6em'}}>{unreadCount}</span>}
-                   </button>
+                </button>
+
+                <h5 className="m-0 text-premium fw-bold fs-6" style={{ color: '#10b981' }}>Code Collab</h5>
+
+                {/* Right side: Chat + Leave buttons */}
+                <div className="d-flex align-items-center gap-2">
+                    {/* Chat toggle button */}
+                    <button
+                        className="btn btn-sm btn-outline-primary position-relative border-0 px-2"
+                        onClick={() => {
+                            setIsChatOpen(!isChatOpen);
+                            if (!isChatOpen) setUnreadCount(0);
+                        }}
+                    >
+                        <i className="bi bi-chat-left-dots fs-5"></i>
+                        {!isChatOpen && unreadCount > 0 && (
+                            <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger border border-dark"
+                                  style={{ fontSize: '0.55em' }}>
+                                {unreadCount}
+                            </span>
+                        )}
+                    </button>
+
+                    {/* Leave button — always visible on mobile */}
+                    <button
+                        onClick={logout}
+                        className="btn btn-sm btn-danger px-2 py-1 fw-semibold d-flex align-items-center gap-1"
+                        style={{ fontSize: '12px', borderRadius: '7px' }}
+                        title="Leave Room"
+                    >
+                        <i className="bi bi-box-arrow-right"></i>
+                        <span>Leave</span>
+                    </button>
                 </div>
             </div>
 
-            {/* Sidebar */}
+            {/* ── Sidebar ── */}
             {isSidebarOpen && (
-                <div className="col-12 col-md-2 bg-sidebar text-light d-flex flex-column border-end border-secondary h-100 position-relative z-index-master">
+                <div
+                    className="text-light d-flex flex-column border-end border-secondary"
+                    style={{
+                        width: isMobile ? '260px' : 'auto',
+                        minWidth: isMobile ? '260px' : '180px',
+                        maxWidth: isMobile ? '260px' : '220px',
+                        background: '#1e293b',
+                        zIndex: isMobile ? 1050 : 'auto',
+                        position: isMobile ? 'absolute' : 'relative',
+                        top: isMobile ? '52px' : 'auto',
+                        left: 0,
+                        height: isMobile ? 'calc(100vh - 52px)' : '100%',
+                    }}
+                >
                     <div className="p-4 text-center d-none d-md-block">
                         <img src="/img/code-logo.png" className="img-fluid mb-3 mx-auto d-block" style={{ maxWidth: "60px" }} alt="Logo" />
                         <h5 className="font-weight-bold" style={{ color: 'var(--accent-primary)', fontSize: '16px' }}>CODE COLLAB</h5>
@@ -240,73 +298,120 @@ export function Dashboard() {
                 </div>
             )}
 
-            {/* Editor & Terminal Area */}
-            <div className="d-flex flex-column h-100 bg-dark transition-all flex-grow-1 min-vw-0">
-                
-                {/* Editor Action Bar */}
-                <div className="bg-dark border-bottom border-secondary p-2 d-flex justify-content-between align-items-center flex-wrap">
-                    <div className="d-flex align-items-center gap-2 mb-2 mb-md-0">
-                         {isHost ? (
-                             <select className="form-select form-select-sm bg-secondary text-white border-secondary" style={{width: '140px'}} value={language} onChange={(e) => changeLanguage(e.target.value)}>
-                                 <option value="javascript">JavaScript (Node)</option>
-                                 <option value="python">Python</option>
-                                 <option value="cpp">C++</option>
-                                 <option value="java">Java</option>
-                             </select>
-                         ) : (
-                             <span className="badge bg-secondary px-3 py-2 text-uppercase fs-6">{language}</span>
-                         )}
-                         <span className={`badge ${isHost ? 'bg-success' : 'bg-secondary'} ms-2`}>
-                            {isHost ? "Editing Permitted" : "View Only"}
-                         </span>
+            {/* ── Editor & Terminal Area ── only visible when chat is NOT open on mobile */}
+            {(!isMobile || !isChatOpen) && (
+                <div className="d-flex flex-column bg-dark transition-all flex-grow-1 min-vw-0"
+                     style={{ height: isMobile ? 'calc(100vh - 52px)' : '100vh' }}>
+                    
+                    {/* Editor Action Bar */}
+                    <div className="bg-dark border-bottom border-secondary p-2 d-flex justify-content-between align-items-center flex-wrap" style={{ flexShrink: 0 }}>
+                        <div className="d-flex align-items-center gap-2 mb-2 mb-md-0">
+                             {isHost ? (
+                                 <select className="form-select form-select-sm bg-secondary text-white border-secondary" style={{width: '140px'}} value={language} onChange={(e) => changeLanguage(e.target.value)}>
+                                     <option value="javascript">JavaScript (Node)</option>
+                                     <option value="python">Python</option>
+                                     <option value="cpp">C++</option>
+                                     <option value="java">Java</option>
+                                 </select>
+                             ) : (
+                                 <span className="badge bg-secondary px-3 py-2 text-uppercase fs-6">{language}</span>
+                             )}
+                             <span className={`badge ${isHost ? 'bg-success' : 'bg-secondary'} ms-2`}>
+                                {isHost ? "Editing Permitted" : "View Only"}
+                             </span>
+                        </div>
+                        {isHost && (
+                            <button className="btn btn-sm btn-success fw-bold px-4" onClick={executeCode} disabled={isTerminalRunning}>
+                                {isTerminalRunning ? <span className="spinner-border spinner-border-sm me-1"></span> : <i className="bi bi-play-fill me-1"></i>} 
+                                Run
+                            </button>
+                        )}
                     </div>
-                    {isHost && (
-                        <button className="btn btn-sm btn-success fw-bold px-4" onClick={executeCode} disabled={isTerminalRunning}>
-                            {isTerminalRunning ? <span className="spinner-border spinner-border-sm me-1"></span> : <i className="bi bi-play-fill me-1"></i>} 
-                            Run
-                        </button>
-                    )}
-                </div>
 
-                <div className="flex-grow-1 overflow-hidden">
-                    <Codeeditor 
-                        socketref={socketref} 
-                        roomid={roomid} 
-                        language={language}
-                        oncodechange={(code) => (coderef.current = code)} 
-                        readOnly={!isHost}
-                    />
-                </div>
-                
-                {/* Terminal Pane */}
-                <Terminal output={terminalOutput} error={terminalError} isRunning={isTerminalRunning} />
-                
-            </div>
-
-            {/* Chat Area */}
-            {isChatOpen && (
-                <div className="col-12 col-md-auto border-start border-secondary h-100 z-index-chat bg-dark" style={{ width: '300px' }}>
-                    {window.innerWidth < 768 && (
-                       <div className="bg-dark border-bottom border-secondary p-2 w-100 text-end">
-                           <button className="btn btn-sm text-white" onClick={() => setIsChatOpen(false)}><i className="bi bi-x-lg"></i> Close Chat</button>
-                       </div>
-                    )}
-                    <div style={{ height: window.innerWidth < 768 ? 'calc(100% - 40px)' : '100%' }}>
-                        <Chat 
+                    <div className="flex-grow-1 overflow-hidden">
+                        <Codeeditor 
                             socketref={socketref} 
                             roomid={roomid} 
-                            username={location.state?.username} 
-                            onNewUnread={() => {
-                                if (!isChatOpen) setUnreadCount((c) => c + 1);
-                            }}
+                            language={language}
+                            oncodechange={(code) => (coderef.current = code)} 
+                            readOnly={!isHost}
                         />
                     </div>
+                    
+                    {/* Terminal Pane */}
+                    <Terminal output={terminalOutput} error={terminalError} isRunning={isTerminalRunning} />
+                    
                 </div>
             )}
 
+            {/* ── Chat Area ── */}
+            {isChatOpen && (
+                <>
+                    {/* MOBILE: Full-screen overlay */}
+                    {isMobile ? (
+                        <div
+                            className="d-flex flex-column bg-dark"
+                            style={{
+                                position: 'fixed',
+                                top: 0,
+                                left: 0,
+                                width: '100vw',
+                                height: '100vh',
+                                zIndex: 2000,
+                            }}
+                        >
+                            {/* Chat overlay header with close button */}
+                            <div className="d-flex align-items-center justify-content-between px-3 py-2 border-bottom border-secondary"
+                                 style={{ background: '#0f172a', flexShrink: 0, minHeight: '50px' }}>
+                                <h6 className="m-0 fw-bold" style={{ color: '#10b981' }}>
+                                    <i className="bi bi-chat-left-dots me-2"></i>Room Chat
+                                </h6>
+                                <button
+                                    className="btn btn-sm btn-outline-danger border-0 d-flex align-items-center gap-1 fw-semibold"
+                                    onClick={() => setIsChatOpen(false)}
+                                    style={{ fontSize: '13px' }}
+                                >
+                                    <i className="bi bi-x-lg"></i> Close
+                                </button>
+                            </div>
+                            {/* Chat component fills remaining space */}
+                            <div style={{ flex: 1, overflow: 'hidden' }}>
+                                <Chat 
+                                    socketref={socketref} 
+                                    roomid={roomid} 
+                                    username={location.state?.username} 
+                                    onNewUnread={() => {
+                                        if (!isChatOpen) setUnreadCount((c) => c + 1);
+                                    }}
+                                    fullWidth={true}
+                                />
+                            </div>
+                        </div>
+                    ) : (
+                        /* DESKTOP: Side panel */
+                        <div className="col-md-auto border-start border-secondary h-100 bg-dark" style={{ width: '300px' }}>
+                            <div style={{ height: '100%' }}>
+                                <Chat 
+                                    socketref={socketref} 
+                                    roomid={roomid} 
+                                    username={location.state?.username} 
+                                    onNewUnread={() => {
+                                        if (!isChatOpen) setUnreadCount((c) => c + 1);
+                                    }}
+                                />
+                            </div>
+                        </div>
+                    )}
+                </>
+            )}
+
             {/* Mobile Backdrop Overlay for Sidebar */}
-            {isSidebarOpen && window.innerWidth < 768 && (
-                <div className="position-fixed w-100 h-100 bg-black opacity-50" style={{top: '60px', left: 0, zIndex: 1045}} onClick={() => setIsSidebarOpen(false)}></div>
+            {isSidebarOpen && isMobile && (
+                <div
+                    className="position-fixed w-100 h-100"
+                    style={{ top: '52px', left: 0, zIndex: 1045, background: 'rgba(0,0,0,0.55)' }}
+                    onClick={() => setIsSidebarOpen(false)}
+                />
             )}
         </div>
     )

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 
-export function Chat({ socketref, roomid, username, onNewUnread }) {
+export function Chat({ socketref, roomid, username, onNewUnread, fullWidth }) {
     const [message, setMessage] = useState("");
     const [messages, setMessages] = useState([]);
     const scrollRef = useRef();
@@ -36,7 +36,7 @@ export function Chat({ socketref, roomid, username, onNewUnread }) {
     };
 
     return (
-        <div className="d-flex flex-column h-100 glass-morphism shadow-lg" style={{ width: '300px', borderLeft: '1px solid rgba(255,255,255,0.1)' }}>
+        <div className="d-flex flex-column h-100 glass-morphism shadow-lg" style={{ width: fullWidth ? '100%' : '300px', borderLeft: fullWidth ? 'none' : '1px solid rgba(255,255,255,0.1)' }}>
             <div className="p-3 border-bottom border-secondary d-flex align-items-center">
                 <h6 className="m-0 text-accent font-weight-bold" style={{ color: 'var(--accent-primary)' }}>CHAT</h6>
             </div>
