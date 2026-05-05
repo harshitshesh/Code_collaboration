@@ -1,83 +1,69 @@
+# 🌐 Real-Time Collaboration Platform
 
-## Created by -
-### Harshit shesh
+A real-time web application where users can connect, communicate, and collaborate through chat and a shared code editor using Socket.IO.
 
+---
 
-# CodeUnity
+## 🚀 Live Demo
+👉 https://heroic-zabaione-c29406.netlify.app/
 
-## Introduction
+---
 
-CodeUnity is a real-time collaborative coding platform where multiple users can join a room and contribute to coding sessions simultaneously. This project provides real-time updates and seamless collaboration, creating an interactive and efficient environment for programmers and developers.
+## 📌 Features
 
-## Features
+### 🔐 Private Room
+- Create or join a private room using Room ID
+- Host control system (only one user can edit at a time)
+- Control can be transferred to other participants
+- Real-time code editor collaboration
+- Live chat for discussion
 
-Real-time Code Editing: Multiple users can write and edit code simultaneously.
+---
 
-Room-based Collaboration: Users can create or join specific rooms for coding sessions.
+### 🌍 Public Room (Proximity-Based)
+- Users can join based on nearby radius (<100m)
+- Real-time group chat with nearby users
+- Discover and connect with people around you
+- Option to start a private session for focused collaboration
 
-Instant Synchronization: All users see live updates of the code in real-time.
+---
 
-User-friendly Interface: A simple and easy-to-use UI for a smooth experience.
+### ⚡ Real-Time Capabilities
+- Instant messaging using Socket.IO
+- Live code synchronization
+- User presence detection
 
-Technologies Used
+---
 
-Frontend: HTML, CSS, JavaScript, Bootstrap
+## 🧠 Tech Stack
 
-Backend: Node.js, Express.js
+### Frontend
+- React.js
+- Socket.IO Client
+- CSS / Tailwind 
 
-Database: Firebase / MongoDB (whichever is used)
+### Backend
+- Node.js
+- Express.js
+- Socket.IO
 
-Real-time Communication: Socket.io
+---
 
-Unique Room Identifiers: UUID
+## ⚙️ How It Works
 
-Code Editor Integration: CodeMirror
+1. User selects:
+   - Public Room
+   - Private Room
 
-Routing System: Express Routers
+2. Private Room:
+   - Host creates room ID
+   - Others join using the same ID
+   - Host controls code editor
 
-## Installation
+3. Public Room:
+   - Location access is taken
+   - Nearby users are connected
+   - Chat and interaction enabled
 
-To run this project on your local system, follow these steps:
+---
 
-# Clone the repository
-git clone (https://github.com/harshitshesh/Code_collaboration/)
-
-# Navigate to the project directory
-cd codeunity
-
-# Install dependencies
-npm install
-
-# Start the server
-npm start
-
-## Usage
-
-Start the server: npm start
-
-Open in browser: http://localhost:3000
-
-Create or Join a Room: Start a new coding session or join an existing one.
-
-Write and Collaborate: Share code with your team and see real-time updates.
-
-Contribution
-
-If you wish to contribute to this project, follow these steps:
-
-Fork the repository.
-
-Clone it to your local system.
-
-Create a branch: git checkout -b feature-branch
-
-Make changes and commit: git commit -m 'Add new feature'
-
-Push the changes: git push origin feature-branch
-
-Submit a pull request.
-
-Author
-
-The CodeUnity project is entirely designed and developed by Harshit Shesh.
-For any suggestions or improvements, feel free to contact me or raise an issue on GitHub.
